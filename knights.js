@@ -63,46 +63,108 @@ const gameBoard = () => {
 }
 
 
-const Knight = (start, finish) => {
+const Knight = () => {
 
     let board = gameBoard().board
-    let found = false
-
-    let visited = [start]
-
+    let visited = []
     let queue = LinkedList()
+
     
 
     function buildQueue(x){
-    
+        
 
-
+     
         // create next moves nodes.        
         let nextNodes = board.get(x) 
-        console.log(nextNodes)
+       
         for (let i in nextNodes) {
-            //check if finish is found
-            if (nextNodes[i] === finish) {
-                found = true
+            // check if already visited
+            const result = visited.find(({ value }) => value == nextNodes[i]);
+        
+            if(typeof result != 'object') {
+        
+            queue.prepend(nextNodes[i], x)   //add nodes to queueue
+           
             }
-            
-            //add nodes to queue
-            queue.prepend(nextNodes[i], start)
-            
-            
         } 
+        occupyVisited(queue.getTail())
+       
+
+    } 
+
+    function occupyVisited(x) {
+       
+        let node = {
+            value: x.value,
+            prev: x.prev
+        }
+
+        visited.push(node)
+
     }
-        
-
-        
-        
-        
-    
-
-    
     
 
     return {board, visited, queue, buildQueue }
+
+
+}
+
+function knightMoves(start, finish) {
+
+    knight = Knight(start, finish)
+    knight.queue.prepend(start)
+    knight.buildQueue(start, finish)
+
+    // while the finishing spot has not been found
+     while (!knight.queue.contains(finish)) {
+        knight.queue.pop();
+        let nextBuild = knight.queue.getTail()
+        knight.buildQueue(nextBuild.value, finish)
+     }
+    
+     const index = knight.queue.find(finish);
+     const at = knight.queue.at(index);
+     let path = buildPath(at, knight.visited)
+
+      finishScript(path);
+     
+     
+    
+     
+
+}
+
+function buildPath(x, y) {
+    let path = [x.value]
+    
+    
+    while (x.prev) {
+        let prev = y.find(({ value }) => value == x.prev);
+        x = prev
+        path.push(x.value)
+    }
+
+    return path
+    
+    
+}
+
+function finishScript(x) {
+    
+    let moves = x.length
+    let array = []
+    for (let i = 0; moves > i; i++) {
+       
+        let pre = x.pop()
+        let split = pre.split('')
+        array.push(split)
+        
+
+    }
+    console.log("You made it in " + moves + " moves! => ")
+    console.log(array)
+    
 
 
 }
@@ -134,12 +196,13 @@ const LinkedList = () => {
     const prepend = (value, prev) => {
 
         if (head=== null) {
-        head = Node(value)
+        head = Node(value, null, prev)
         size++
         }  else {
             newHead = Node(value, null, prev);
             newHead.nextNode = head;
             head = newHead;
+            size++
     }
     }
 
@@ -254,11 +317,8 @@ const Node = (x, y, i) => {
    return {value, nextNode, prev}
 };
 
-let x =  gameBoard();
 
 
+console.log(knightMoves('00', '55'))
 
-let knight = Knight()
-knight.buildQueue('00')
-console.log(knight.queue.pop)
 
