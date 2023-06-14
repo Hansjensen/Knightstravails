@@ -111,7 +111,8 @@ const Knight = () => {
 }
 
 function knightMoves(start, finish) {
-
+    start = makeArrayNumber(start)
+    finish = makeArrayNumber(finish)
     knight = Knight(start, finish)
     knight.queue.prepend(start)
     knight.buildQueue(start, finish)
@@ -158,6 +159,7 @@ function finishScript(x) {
        
         let pre = x.pop()
         let split = pre.split('')
+
         array.push(split)
         
 
@@ -165,6 +167,16 @@ function finishScript(x) {
     console.log("You made it in " + moves + " moves! => ")
     console.log(array)
     
+
+
+}
+
+function makeArrayNumber(x) {
+
+    let b = x[0]
+    let c = x[1]
+   
+    return b + '' + c
 
 
 }
@@ -319,6 +331,5 @@ const Node = (x, y, i) => {
 
 
 
-console.log(knightMoves('00', '55'))
-
+console.log(knightMoves([4,5], [6,4]))
 
